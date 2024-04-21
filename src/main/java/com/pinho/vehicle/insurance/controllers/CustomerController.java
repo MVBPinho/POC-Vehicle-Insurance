@@ -1,8 +1,9 @@
 package com.pinho.vehicle.insurance.controllers;
 
-import com.pinho.vehicle.insurance.utils.MediaType;
+import com.pinho.vehicle.insurance.data.vo.v1.CustomerInsuranceVO;
 import com.pinho.vehicle.insurance.data.vo.v1.CustomerVO;
 import com.pinho.vehicle.insurance.services.CustomerService;
+import com.pinho.vehicle.insurance.utils.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +22,12 @@ public class CustomerController {
         return service.findAll();
     }
 
+    @GetMapping(value = "/insurance")
+    public ResponseEntity<CustomerInsuranceVO> findCustomerWithInsurancesById() {
+        CustomerInsuranceVO customer = service.findCustomerWithInsurancesById();
+        return ResponseEntity.ok(customer);
+    }
+
     @GetMapping(value = "/{id}", produces = {MediaType.APPLICATION_JSON})
     public CustomerVO findById(@PathVariable(value = "id") Long id) {
         return service.findById(id);
@@ -37,7 +44,7 @@ public class CustomerController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) {
+    public ResponseEntity<CustomerVO> delete(@PathVariable(value = "id") Long id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
     }

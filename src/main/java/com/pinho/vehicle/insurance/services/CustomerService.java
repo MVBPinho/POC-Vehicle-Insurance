@@ -1,10 +1,12 @@
 package com.pinho.vehicle.insurance.services;
 
 import com.pinho.vehicle.insurance.controllers.CustomerController;
+import com.pinho.vehicle.insurance.data.vo.v1.CustomerInsuranceVO;
 import com.pinho.vehicle.insurance.data.vo.v1.CustomerVO;
 import com.pinho.vehicle.insurance.entities.Customer;
-import com.pinho.vehicle.insurance.exceptions.ResourceNotFoundException;
+import com.pinho.vehicle.insurance.entities.Insurance;
 import com.pinho.vehicle.insurance.exceptions.RequiredObjectIsNullException;
+import com.pinho.vehicle.insurance.exceptions.ResourceNotFoundException;
 import com.pinho.vehicle.insurance.mapper.DozerMapper;
 import com.pinho.vehicle.insurance.repositories.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,13 +23,28 @@ public class CustomerService {
     @Autowired
     private CustomerRepository repository;
 
+    public CustomerInsuranceVO findCustomerWithInsurancesById() {
+        List<Object[]> result = repository.findCustomerInsuranceDetails();
+        Customer customer = new Customer();
+        for (Object[] row : result) {
+            Long customerId = (Long) row[0];
+            String customerName = (String) row[1];
+            String insuranceType = (String) row[2];
+            Integer insuranceCost = (Integer) row[3];
+
+            customer.setName(customerName);
+            customer.addInsurance(new Insurance(insuranceType, insuranceCost));
+        }
+        return DozerMapper.parseObject(customer, CustomerInsuranceVO.class);
+    }
+
     public List<CustomerVO> findAll() {
         var customers = DozerMapper.parseListObjects(repository.findAll(), CustomerVO.class);
         customers.forEach(customer ->
-                        customer.add(linkTo(methodOn(
-                                CustomerController.class)
-                                .findById(customer.getKey()))
-                                .withSelfRel()));
+                customer.add(linkTo(methodOn(
+                        CustomerController.class)
+                        .findById(customer.getKey()))
+                        .withSelfRel()));
         return customers;
     }
 

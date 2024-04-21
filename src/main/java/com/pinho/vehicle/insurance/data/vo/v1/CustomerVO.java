@@ -1,14 +1,19 @@
 package com.pinho.vehicle.insurance.data.vo.v1;
 
-import java.io.Serializable;
-import java.util.Objects;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.github.dozermapper.core.Mapping;
+import com.pinho.vehicle.insurance.entities.Customer;
 import org.springframework.hateoas.RepresentationModel;
 
-@JsonPropertyOrder({"id", "name", "cpf", "age", "location", "value_vehicle"})
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+@JsonPropertyOrder({"customer"})
 public class CustomerVO extends RepresentationModel<CustomerVO> implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -20,13 +25,21 @@ public class CustomerVO extends RepresentationModel<CustomerVO> implements Seria
     private String cpf;
     private Integer age;
     private String location;
+    @JsonProperty("value_vehicle")
     private Double valueVehicle;
+
+    private List<InsuranceVO> insurances = new ArrayList<>();
 
     public CustomerVO() {
     }
 
-    public CustomerVO(String name) {
-        this.name = name;
+    public CustomerVO(Customer customer) {
+        key = customer.getId();
+        name = customer.getName();
+        age = customer.getAge();
+        location = customer.getLocation();
+        valueVehicle = customer.getValueVehicle();
+        insurances = customer.getInsurances().stream().map(InsuranceVO::new).collect(Collectors.toList());
     }
 
     public Long getKey() {
@@ -71,6 +84,10 @@ public class CustomerVO extends RepresentationModel<CustomerVO> implements Seria
 
     public void setValueVehicle(Double valueVehicle) {
         this.valueVehicle = valueVehicle;
+    }
+
+    public List<InsuranceVO> getInsurances() {
+        return insurances;
     }
 
     @Override

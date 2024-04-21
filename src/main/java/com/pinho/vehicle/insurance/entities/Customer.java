@@ -1,10 +1,11 @@
 package com.pinho.vehicle.insurance.entities;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.Objects;
+import java.util.*;
 
 @Entity
 @Table(name = "tb_customer")
@@ -30,9 +31,14 @@ public class Customer implements Serializable {
     private String location;
 
     @Column(name = "value_vehicle")
+    @JsonProperty("value_vehicle")
     private Double valueVehicle;
 
-    public Customer( ) {}
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Insurance> insurances = new ArrayList<>();
+
+    public Customer() {
+    }
 
     public Customer(Long id, String name, String cpf, Integer age, String location, Double valueVehicle) {
         this.id = id;
@@ -43,13 +49,11 @@ public class Customer implements Serializable {
         this.valueVehicle = valueVehicle;
     }
 
-    public Customer(Customer customer) {
-        id = customer.getId();
-        name = customer.getName();
-        cpf = customer.getCpf();
-        age = customer.getAge();
-        location = customer.getLocation();
-        valueVehicle = customer.getValueVehicle();
+    public Customer(Long id, String name, List<Insurance> insurances) {
+        this.id = id;
+
+        this.name = name;
+        this.insurances = insurances;
     }
 
     public Long getId() {
@@ -94,6 +98,20 @@ public class Customer implements Serializable {
 
     public void setValueVehicle(Double valueVehicle) {
         this.valueVehicle = valueVehicle;
+    }
+
+    public List<Insurance> getInsurances() {
+        return insurances;
+    }
+
+    public void addInsurance(Insurance insurance) {
+        insurance.setCustomer(this);
+        insurances.add(insurance);
+    }
+
+    public void removeInsurance(Insurance insurance) {
+        insurances.remove(insurance);
+        insurance.setCustomer(null);
     }
 
     @Override

@@ -23,10 +23,14 @@ public class Insurance implements Serializable {
     @Column(nullable = false, length = 3)
     private Integer cost;
 
-    public Insurance( ) {}
+    @ManyToOne
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
 
-    public Insurance(Long id, String type, Integer cost) {
-        this.id = id;
+    public Insurance() {
+    }
+
+    public Insurance(String type, Integer cost) {
         this.type = type;
         this.cost = cost;
     }
@@ -49,6 +53,14 @@ public class Insurance implements Serializable {
 
     public void setCost(Integer cost) {
         this.cost = cost;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 
     @Override

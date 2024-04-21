@@ -3,12 +3,13 @@ package com.pinho.vehicle.insurance.data.vo.v1;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.github.dozermapper.core.Mapping;
+import com.pinho.vehicle.insurance.entities.Insurance;
 import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serializable;
 import java.util.Objects;
 
-@JsonPropertyOrder({"id", "type", "cost"})
+@JsonPropertyOrder({"type", "cost"})
 public class InsuranceVO extends RepresentationModel<InsuranceVO> implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -22,9 +23,10 @@ public class InsuranceVO extends RepresentationModel<InsuranceVO> implements Ser
     public InsuranceVO() {
     }
 
-    public InsuranceVO(String type, Integer cost) {
-        this.type = type;
-        this.cost = cost;
+    public InsuranceVO(Insurance insurance) {
+        key = insurance.getId();
+        type = insurance.getType();
+        cost = insurance.getCost();
     }
 
     public Long getKey() {

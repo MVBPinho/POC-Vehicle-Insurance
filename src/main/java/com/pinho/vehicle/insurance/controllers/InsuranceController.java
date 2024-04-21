@@ -1,8 +1,8 @@
 package com.pinho.vehicle.insurance.controllers;
 
 import com.pinho.vehicle.insurance.data.vo.v1.InsuranceVO;
-import com.pinho.vehicle.insurance.utils.MediaType;
 import com.pinho.vehicle.insurance.services.InsuranceService;
+import com.pinho.vehicle.insurance.utils.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +36,7 @@ public class InsuranceController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) {
+    public ResponseEntity<InsuranceVO> delete(@PathVariable(value = "id") Long id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
     }
