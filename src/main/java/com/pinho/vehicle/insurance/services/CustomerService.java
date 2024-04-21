@@ -4,7 +4,9 @@ import com.pinho.vehicle.insurance.entities.Customer;
 import com.pinho.vehicle.insurance.entities.Insurance;
 import com.pinho.vehicle.insurance.exceptions.RequiredObjectIsNullException;
 import com.pinho.vehicle.insurance.exceptions.ResourceNotFoundException;
+import com.pinho.vehicle.insurance.exceptions.UniqueConstraintViolationException;
 import com.pinho.vehicle.insurance.repositories.CustomerRepository;
+import com.pinho.vehicle.insurance.utils.CalculatorTypeInsuranceVehicle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -49,7 +51,16 @@ public class CustomerService {
 
     public Customer create(Customer customer) {
         if (customer == null) throw new RequiredObjectIsNullException();
-        return repository.save(customer);
+        CalculatorTypeInsuranceVehicle calculatorTypeInsuranceVehicle = new CalculatorTypeInsuranceVehicle();
+        List<Insurance> insurances = calculatorTypeInsuranceVehicle.calculateInsurance(customer);
+        for (Insurance x : insurances) {
+            customer.addInsurance(x);
+        }
+        try {
+            return repository.save(customer);
+        } catch (Exception e) {
+            throw new UniqueConstraintViolationException("Unique constraint violation: " + e.getMessage());
+        }
     }
 
     public Customer update(Customer customer) {
