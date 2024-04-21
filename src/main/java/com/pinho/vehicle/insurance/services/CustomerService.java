@@ -33,7 +33,7 @@ public class CustomerService {
             Integer insuranceCost = (Integer) row[3];
 
             customer.setName(customerName);
-            customer.addInsurance(new Insurance(insuranceType, insuranceCost));
+            customer.addInsurance(new Insurance(insuranceType, insuranceCost, customer));
         }
         return DozerMapper.parseObject(customer, CustomerInsuranceVO.class);
     }

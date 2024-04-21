@@ -1,5 +1,6 @@
 package com.pinho.vehicle.insurance.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
@@ -40,18 +41,17 @@ public class Customer implements Serializable {
     public Customer() {
     }
 
-    public Customer(Long id, String name, String cpf, Integer age, String location, Double valueVehicle) {
+    public Customer(Long id, String name, String cpf, Integer age, String location, Double valueVehicle, List<Insurance> insurances) {
         this.id = id;
         this.name = name;
         this.cpf = cpf;
         this.age = age;
         this.location = location;
         this.valueVehicle = valueVehicle;
+        this.insurances = insurances;
     }
 
-    public Customer(Long id, String name, List<Insurance> insurances) {
-        this.id = id;
-
+    public Customer(String name, List<Insurance> insurances) {
         this.name = name;
         this.insurances = insurances;
     }
@@ -100,12 +100,12 @@ public class Customer implements Serializable {
         this.valueVehicle = valueVehicle;
     }
 
+    @JsonManagedReference
     public List<Insurance> getInsurances() {
         return insurances;
     }
 
     public void addInsurance(Insurance insurance) {
-        insurance.setCustomer(this);
         insurances.add(insurance);
     }
 

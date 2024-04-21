@@ -2,6 +2,7 @@ package com.pinho.vehicle.insurance.controllers;
 
 import com.pinho.vehicle.insurance.data.vo.v1.CustomerInsuranceVO;
 import com.pinho.vehicle.insurance.data.vo.v1.CustomerVO;
+import com.pinho.vehicle.insurance.data.vo.v1.InsuranceVO;
 import com.pinho.vehicle.insurance.services.CustomerService;
 import com.pinho.vehicle.insurance.utils.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ public class CustomerController {
     @GetMapping(value = "/insurance")
     public ResponseEntity<CustomerInsuranceVO> findCustomerWithInsurancesById() {
         CustomerInsuranceVO customer = service.findCustomerWithInsurancesById();
+
         return ResponseEntity.ok(customer);
     }
 
