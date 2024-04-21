@@ -10,7 +10,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-    @Value("${cors.originPatterns:default}")
+    @Value("${cors.origin-patterns:default}")
+
     private String corsOriginPatterns = "";
 
     @Override
