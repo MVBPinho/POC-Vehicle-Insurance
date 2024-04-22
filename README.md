@@ -40,19 +40,18 @@ Para auxiliar nos testes do sistema foi desenvolvido a documentação técnica d
 ## Clientes
 ## Pesquisar todos os clientes
 - GET http://localhost:1000/customers
-* HEADERS:
-** Accept=application/json
-** Origin=http://localhost:8080
-
+**HEADERS:**
+* Accept:application/json
+* Origin:http://localhost:8080
 
 ### Pesquisar um cliente
 - GET http://localhost:1000/customers/1
-
 - HTTP/1.1 200 OK 
 
 ### Cadastrar um cliente
 - POST http://localhost:1000/customers
-* BODY:
+**BODY:**
+`
 {
 	"name": "João",
     "cpf": "123.456.789-10",
@@ -60,12 +59,13 @@ Para auxiliar nos testes do sistema foi desenvolvido a documentação técnica d
     "location": "BH",
     "value_vehicle": 70000
 }
-
+`
 - HTTP/1.1 200 OK 
 
 ### Atualizar um cliente
 - PUT http://localhost:1000/customers
-* BODY:
+**BODY:**
+`
 {
 	"id" : 1,
     "name": "João",
@@ -74,48 +74,45 @@ Para auxiliar nos testes do sistema foi desenvolvido a documentação técnica d
     "location": "SP",
     "value_vehicle": 80000
 }
-
+`
 - HTTP/1.1 200 OK 
 
 ### Deletar um cliente
 - DELETE http://localhost:1000/customers/1
-
 - HTTP/1.1 204 NO CONTENT 
 
 ## Seguros
-
 ### Pesquisar todos os seguros
 - GET http://localhost:1000/customers/1
-
 - HTTP/1.1 200 OK 
 
 ## Pesquisar um seguro
 - GET http://localhost:1000/insurances/3
-
 - HTTP/1.1 200 OK 
 
 ## Cadastrar um seguro
 - POST http://localhost:1000/insurances
-* BODY:
+**BODY:**
+`
 {
     "type": "TOTAL",
     "cost": 5
 }
-
+`
 - HTTP/1.1 200 OK 
 
 ## Atualizar um seguro
 - PUT http://localhost:1000/insurances
-* BODY:
+**BODY:**
+`
 {
     "id" : 4,
     "type": "TOTAL",
     "cost": 8
 }
-
+`
 - HTTP/1.1 200 OK 
 
 ## Deletar um seguro
 - DELETE http://localhost:1000/insurances/1
-
 - HTTP/1.1 204 NO CONTENT
