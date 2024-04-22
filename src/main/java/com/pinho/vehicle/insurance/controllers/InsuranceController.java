@@ -1,5 +1,6 @@
 package com.pinho.vehicle.insurance.controllers;
 
+import com.pinho.vehicle.insurance.dto.InsuranceDTO;
 import com.pinho.vehicle.insurance.entities.Insurance;
 import com.pinho.vehicle.insurance.services.InsuranceService;
 import com.pinho.vehicle.insurance.utils.MediaType;
@@ -12,7 +13,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -39,8 +42,9 @@ public class InsuranceController {
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                     @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content)
             })
-    public List<Insurance> findAll() {
-        return service.findAll();
+    public ResponseEntity<List<InsuranceDTO>> findAll() {
+        List<InsuranceDTO> list = service.findAll();
+        return ResponseEntity.ok().body(list);
     }
 
     @GetMapping(value = "/{id}", produces = {MediaType.APPLICATION_JSON})
@@ -57,8 +61,9 @@ public class InsuranceController {
                     @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content)
             }
     )
-    public Insurance findById(@PathVariable(value = "id") Long id) {
-        return service.findById(id);
+    public  ResponseEntity<InsuranceDTO> findById(@PathVariable(value = "id") Long id) {
+        InsuranceDTO dto = service.findById(id);
+        return ResponseEntity.ok().body(dto);
     }
 
     @PostMapping(consumes = {MediaType.APPLICATION_JSON})
@@ -74,11 +79,13 @@ public class InsuranceController {
                     @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content)
             }
     )
-    public Insurance create(@RequestBody Insurance insurance) {
-        return service.create(insurance);
+    public ResponseEntity<InsuranceDTO> create(@RequestBody InsuranceDTO insurance) {
+        insurance = service.create(insurance);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(insurance.getId()).toUri();
+        return ResponseEntity.created(uri).body(insurance);
     }
 
-    @PutMapping(consumes = { MediaType.APPLICATION_JSON}, produces = { MediaType.APPLICATION_JSON})
+    @PutMapping(consumes = {MediaType.APPLICATION_JSON}, produces = {MediaType.APPLICATION_JSON})
     @Operation(summary = "Updates a Insurance",
             description = "Updates a new Insurance by passing in a JSON representation of the insurance!",
             tags = {"Insurance"},
@@ -92,8 +99,9 @@ public class InsuranceController {
                     @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content)
             }
     )
-    public Insurance update(@RequestBody Insurance insurance) {
-        return service.update(insurance);
+    public ResponseEntity<InsuranceDTO> update(@RequestBody InsuranceDTO insurance) {
+        InsuranceDTO dto = service.update(insurance);
+        return ResponseEntity.ok().body(dto);
     }
 
     @DeleteMapping("/{id}")
@@ -108,8 +116,9 @@ public class InsuranceController {
                     @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content)
             }
     )
-    public ResponseEntity<Insurance> delete(@PathVariable(value = "id") Long id) {
+    public ResponseEntity<InsuranceDTO> delete(@PathVariable(value = "id") Long id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
+
     }
 }
