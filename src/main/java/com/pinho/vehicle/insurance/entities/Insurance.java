@@ -1,6 +1,5 @@
 package com.pinho.vehicle.insurance.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.io.Serial;
@@ -24,17 +23,18 @@ public class Insurance implements Serializable {
     @Column(nullable = false, length = 3)
     private Integer cost;
 
-    @ManyToOne
-    @JoinColumn(name = "customer_id")
-    private Customer customer;
-
     public Insurance() {
     }
 
-    public Insurance(String type, Integer cost, Customer customer) {
+    public Insurance(Long id, String type, Integer cost) {
+        this.id = id;
         this.type = type;
         this.cost = cost;
-        this.customer = customer;
+    }
+
+    public Insurance(String type, Integer cost) {
+        this.type = type;
+        this.cost = cost;
     }
 
     public Long getId() {
@@ -55,15 +55,6 @@ public class Insurance implements Serializable {
 
     public void setCost(Integer cost) {
         this.cost = cost;
-    }
-
-    @JsonBackReference
-    public Customer getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
     }
 
     @Override

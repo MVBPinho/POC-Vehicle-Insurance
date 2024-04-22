@@ -12,7 +12,7 @@ public class CalculatorTypeInsuranceVehicle {
         this.insuranceCalculation = new InsuranceCalculation();
     }
 
-    public List<Insurance> calculateInsurance(Customer customer) {
-        return insuranceCalculation.calculateTypeInsuranceVehicle(customer);
+    public List<Insurance> calculateInsurance(Double vehicleValue, Integer age, String location) {
+        return insuranceCalculation.calculateTypeInsuranceVehicle(vehicleValue, age, location);
     }
 }

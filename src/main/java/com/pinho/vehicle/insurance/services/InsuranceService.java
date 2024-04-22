@@ -34,8 +34,13 @@ public class InsuranceService {
     public Insurance update(Insurance insurance) {
         if (insurance == null) throw new RequiredObjectIsNullException();
 
-        return repository.findById(insurance.getId())
+        var entity =  repository.findById(insurance.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("No records found for this ID!"));
+
+        entity.setType(insurance.getType());
+        entity.setCost(insurance.getCost());
+
+        return repository.save(entity);
     }
 
     public void delete(Long id) {

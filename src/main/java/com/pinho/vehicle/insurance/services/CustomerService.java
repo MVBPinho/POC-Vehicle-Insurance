@@ -51,11 +51,6 @@ public class CustomerService {
 
     public Customer create(Customer customer) {
         if (customer == null) throw new RequiredObjectIsNullException();
-        CalculatorTypeInsuranceVehicle calculatorTypeInsuranceVehicle = new CalculatorTypeInsuranceVehicle();
-        List<Insurance> insurances = calculatorTypeInsuranceVehicle.calculateInsurance(customer);
-        for (Insurance x : insurances) {
-            customer.addInsurance(x);
-        }
         try {
             return repository.save(customer);
         } catch (Exception e) {
