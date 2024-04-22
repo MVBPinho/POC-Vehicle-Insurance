@@ -1,6 +1,5 @@
 package com.pinho.vehicle.insurance.controllers;
 
-import com.pinho.vehicle.insurance.entities.Customer;
 import com.pinho.vehicle.insurance.entities.Insurance;
 import com.pinho.vehicle.insurance.services.InsuranceService;
 import com.pinho.vehicle.insurance.utils.MediaType;

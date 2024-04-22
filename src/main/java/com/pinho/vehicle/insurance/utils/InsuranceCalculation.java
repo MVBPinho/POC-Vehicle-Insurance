@@ -1,6 +1,5 @@
 package com.pinho.vehicle.insurance.utils;
 
-import com.pinho.vehicle.insurance.entities.Customer;
 import com.pinho.vehicle.insurance.entities.Insurance;
 
 import java.util.ArrayList;

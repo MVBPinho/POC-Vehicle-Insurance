@@ -6,17 +6,19 @@ import com.pinho.vehicle.insurance.exceptions.RequiredObjectIsNullException;
 import com.pinho.vehicle.insurance.exceptions.ResourceNotFoundException;
 import com.pinho.vehicle.insurance.exceptions.UniqueConstraintViolationException;
 import com.pinho.vehicle.insurance.repositories.CustomerRepository;
-import com.pinho.vehicle.insurance.utils.CalculatorTypeInsuranceVehicle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 @Service
 public class CustomerService {
 
     @Autowired
     private CustomerRepository repository;
+
+    private Logger logger = Logger.getLogger(CustomerService.class.getName());
 
     public Customer findCustomerWithInsurancesById() {
         List<Object[]> result = repository.findCustomerInsuranceDetails();
@@ -40,10 +42,12 @@ public class CustomerService {
     }
 
     public List<Customer> findAll() {
+        logger.info("Finding all customers!");
         return repository.findAll();
     }
 
     public Customer findById(Long id) {
+        logger.info("Finding one customers!");
 
         return repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No records found for this ID!"));
@@ -51,6 +55,8 @@ public class CustomerService {
 
     public Customer create(Customer customer) {
         if (customer == null) throw new RequiredObjectIsNullException();
+        logger.info("Creating one customer!");
+
         try {
             return repository.save(customer);
         } catch (Exception e) {
@@ -60,6 +66,8 @@ public class CustomerService {
 
     public Customer update(Customer customer) {
         if (customer == null) throw new RequiredObjectIsNullException();
+
+        logger.info("Updating one customer!");
 
         var entity = repository.findById(customer.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("No records found for this ID!"));
@@ -73,6 +81,8 @@ public class CustomerService {
     }
 
     public void delete(Long id) {
+        logger.info("Deleting one customer!");
+
         var entity = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No records found for this ID!"));
         repository.delete(entity);

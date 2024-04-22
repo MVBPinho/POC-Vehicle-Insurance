@@ -112,9 +112,4 @@ public class CustomerController {
         service.delete(id);
         return ResponseEntity.noContent().build();
     }
-
-    //    @GetMapping(value = "/insurance")
-//    public Customer findCustomerWithInsurancesById() {
-//        return service.findCustomerWithInsurancesById();
-//    }
 }
