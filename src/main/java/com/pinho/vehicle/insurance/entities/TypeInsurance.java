@@ -1,33 +1,45 @@
-package com.pinho.vehicle.insurance.dto;
+package com.pinho.vehicle.insurance.entities;
 
-import com.pinho.vehicle.insurance.entities.Insurance;
+import jakarta.persistence.*;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class InsuranceDTO implements Serializable {
+@Entity
+@Table(name = "tb_type_insurance")
+public class TypeInsurance implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JoinColumn(name = "type_insurance_id")
     private Long id;
+
+    @Column(nullable = false, length = 10)
     private String type;
+
+    @Column(nullable = false, length = 3)
     private Integer cost;
 
-    public InsuranceDTO() {
+    public TypeInsurance() {
     }
 
-    public InsuranceDTO(Long id, String type, Integer cost) {
+    public TypeInsurance(Long id) {
+        this.id = id;
+    }
+
+    public TypeInsurance(Long id, String type, Integer cost) {
         this.id = id;
         this.type = type;
         this.cost = cost;
     }
 
-    public InsuranceDTO(Insurance insurance) {
-        id = insurance.getId();
-        type = insurance.getType();
-        cost = insurance.getCost();
+    public TypeInsurance(String type, Integer cost) {
+        this.type = type;
+        this.cost = cost;
     }
 
     public Long getId() {
@@ -54,8 +66,8 @@ public class InsuranceDTO implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        InsuranceDTO that = (InsuranceDTO) o;
-        return Objects.equals(id, that.id);
+        TypeInsurance insurance = (TypeInsurance) o;
+        return Objects.equals(id, insurance.id);
     }
 
     @Override

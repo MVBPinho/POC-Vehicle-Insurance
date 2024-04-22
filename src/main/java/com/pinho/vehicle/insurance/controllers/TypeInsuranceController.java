@@ -1,8 +1,8 @@
 package com.pinho.vehicle.insurance.controllers;
 
-import com.pinho.vehicle.insurance.dto.InsuranceDTO;
-import com.pinho.vehicle.insurance.entities.Insurance;
-import com.pinho.vehicle.insurance.services.InsuranceService;
+import com.pinho.vehicle.insurance.dto.TypeInsuranceDTO;
+import com.pinho.vehicle.insurance.entities.TypeInsurance;
+import com.pinho.vehicle.insurance.services.TypeInsuranceService;
 import com.pinho.vehicle.insurance.utils.MediaType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -19,22 +19,22 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/insurances")
-@Tag(name = "Insurance", description = "Endpoints for Managing Insurance")
-public class InsuranceController {
+@RequestMapping("/types/insurances")
+@Tag(name = "Type_Insurance", description = "Endpoints for Managing Type Insurance")
+public class TypeInsuranceController {
 
     @Autowired
-    private InsuranceService service;
+    private TypeInsuranceService service;
 
     @GetMapping(produces = {MediaType.APPLICATION_JSON})
-    @Operation(summary = "Finds all Insurance", description = "Finds all insurance",
-            tags = {"Insurance"},
+    @Operation(summary = "Finds all types insurances", description = "Finds all types insurances",
+            tags = {"Type_Insurance"},
             responses = {
                     @ApiResponse(description = "Success", responseCode = "200",
                             content = {
                                     @Content(
                                             mediaType = "application/json",
-                                            array = @ArraySchema(schema = @Schema(implementation = Insurance.class))
+                                            array = @ArraySchema(schema = @Schema(implementation = TypeInsurance.class))
                                     )
                             }),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
@@ -42,17 +42,17 @@ public class InsuranceController {
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                     @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content)
             })
-    public ResponseEntity<List<InsuranceDTO>> findAll() {
-        List<InsuranceDTO> list = service.findAll();
+    public ResponseEntity<List<TypeInsuranceDTO>> findAll() {
+        List<TypeInsuranceDTO> list = service.findAll();
         return ResponseEntity.ok().body(list);
     }
 
     @GetMapping(value = "/{id}", produces = {MediaType.APPLICATION_JSON})
-    @Operation(summary = "Finds a Insurance", description = "Finds a Insurance",
-            tags = {"Insurance"},
+    @Operation(summary = "Find a type insurance", description = "Find a type insurance",
+            tags = {"Type_Insurance"},
             responses = {
                     @ApiResponse(description = "Success", responseCode = "200",
-                            content = @Content(schema = @Schema(implementation = Insurance.class))
+                            content = @Content(schema = @Schema(implementation = TypeInsurance.class))
                     ),
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
@@ -61,37 +61,37 @@ public class InsuranceController {
                     @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content)
             }
     )
-    public  ResponseEntity<InsuranceDTO> findById(@PathVariable(value = "id") Long id) {
-        InsuranceDTO dto = service.findById(id);
+    public  ResponseEntity<TypeInsuranceDTO> findById(@PathVariable(value = "id") Long id) {
+        TypeInsuranceDTO dto = service.findById(id);
         return ResponseEntity.ok().body(dto);
     }
 
     @PostMapping(consumes = {MediaType.APPLICATION_JSON})
-    @Operation(summary = "Adds a new Insurance",
-            description = "Adds a new Insurance by passing in a JSON representation of the insurance!",
-            tags = {"Insurance"},
+    @Operation(summary = "Adds a new type insurance",
+            description = "Adds a new type insurance by passing in a JSON representation of the type insurance!",
+            tags = {"Type_Insurance"},
             responses = {
                     @ApiResponse(description = "Success", responseCode = "200",
-                            content = @Content(schema = @Schema(implementation = Insurance.class))
+                            content = @Content(schema = @Schema(implementation = TypeInsurance.class))
                     ),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
                     @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content)
             }
     )
-    public ResponseEntity<InsuranceDTO> create(@RequestBody InsuranceDTO insurance) {
+    public ResponseEntity<TypeInsuranceDTO> create(@RequestBody TypeInsuranceDTO insurance) {
         insurance = service.create(insurance);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(insurance.getId()).toUri();
         return ResponseEntity.created(uri).body(insurance);
     }
 
     @PutMapping(consumes = {MediaType.APPLICATION_JSON}, produces = {MediaType.APPLICATION_JSON})
-    @Operation(summary = "Updates a Insurance",
-            description = "Updates a new Insurance by passing in a JSON representation of the insurance!",
-            tags = {"Insurance"},
+    @Operation(summary = "Updates a type insurance",
+            description = "Updates a new type insurance by passing in a JSON representation of the type insurance!",
+            tags = {"Type_Insurance"},
             responses = {
                     @ApiResponse(description = "Success", responseCode = "200",
-                            content = @Content(schema = @Schema(implementation = Insurance.class))
+                            content = @Content(schema = @Schema(implementation = TypeInsurance.class))
                     ),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
@@ -99,15 +99,15 @@ public class InsuranceController {
                     @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content)
             }
     )
-    public ResponseEntity<InsuranceDTO> update(@RequestBody InsuranceDTO insurance) {
-        InsuranceDTO dto = service.update(insurance);
+    public ResponseEntity<TypeInsuranceDTO> update(@RequestBody TypeInsuranceDTO insurance) {
+        TypeInsuranceDTO dto = service.update(insurance);
         return ResponseEntity.ok().body(dto);
     }
 
     @DeleteMapping("/{id}")
-    @Operation(summary = "Deletes a Insurances",
-            description = "Deletes a new Insurance by passing in a JSON representation of the insurance!",
-            tags = {"Insurance"},
+    @Operation(summary = "Deletes a type insurances",
+            description = "Deletes a new type insurance by passing in a JSON representation of the type insurance!",
+            tags = {"Type_Insurance"},
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
@@ -116,7 +116,7 @@ public class InsuranceController {
                     @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content)
             }
     )
-    public ResponseEntity<InsuranceDTO> delete(@PathVariable(value = "id") Long id) {
+    public ResponseEntity<TypeInsuranceDTO> delete(@PathVariable(value = "id") Long id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
 
