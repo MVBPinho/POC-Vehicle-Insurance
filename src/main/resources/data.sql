@@ -4,12 +4,12 @@
 INSERT INTO TB_CUSTOMER (name, cpf, age, location, value_vehicle) VALUES ('Beltrano', '12345678901', 30, 'RS', 70050.00);
 
 
-INSERT INTO TB_TYPE_INSURANCE (type, cost) VALUES ('BASIC', 2);
-INSERT INTO TB_TYPE_INSURANCE (type, cost) VALUES ('PARTIAL', 3);
-INSERT INTO TB_TYPE_INSURANCE (type, cost) VALUES ('TOTAL', 4);
+INSERT INTO TB_INSURANCE (type, cost) VALUES ('BASIC', 2);
+INSERT INTO TB_INSURANCE (type, cost) VALUES ('PARTIAL', 3);
+INSERT INTO TB_INSURANCE (type, cost) VALUES ('TOTAL', 4);
 
-INSERT INTO TB_INSURANCE (customer_id, type_insurance_id) VALUES (1, 1);
-INSERT INTO TB_INSURANCE (customer_id, type_insurance_id) VALUES (1, 2);
+INSERT INTO TB_CUSTOMER_INSURANCE (id_customer, id_insurance) VALUES (1, 1);
+INSERT INTO TB_CUSTOMER_INSURANCE (id_customer, id_insurance) VALUES (1, 2);
 
 --INSERT INTO TB_INSURANCE (type, cost) VALUES ('PARTIAL', 3);
 --INSERT INTO TB_INSURANCE (type, cost) VALUES ('BASIC', 2);

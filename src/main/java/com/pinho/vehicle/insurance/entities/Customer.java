@@ -35,16 +35,16 @@ public class Customer implements Serializable {
     @JsonProperty("value_vehicle")
     private Double valueVehicle;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "tb_insurance",
-            joinColumns = @JoinColumn (name = "customer_id"),
-            inverseJoinColumns = @JoinColumn (name = "type_insurance_id"))
-    private List<TypeInsurance> insurances = new ArrayList<>();
+    @ManyToMany
+    @JoinTable(name = "tb_customer_insurance",
+            joinColumns = @JoinColumn (name = "id_customer"),
+            inverseJoinColumns = @JoinColumn (name = "id_insurance"))
+    private List<Insurance> insurances = new ArrayList<>();
 
     public Customer() {
     }
 
-    public Customer(Long id, String name, String cpf, Integer age, String location, Double valueVehicle, List<TypeInsurance> insurances) {
+    public Customer(Long id, String name, String cpf, Integer age, String location, Double valueVehicle, List<Insurance> insurances) {
         this.id = id;
         this.name = name;
         this.cpf = cpf;
@@ -54,7 +54,7 @@ public class Customer implements Serializable {
         this.insurances = insurances;
     }
 
-    public Customer(String name, List<TypeInsurance> insurances) {
+    public Customer(String name, List<Insurance> insurances) {
         this.name = name;
         this.insurances = insurances;
     }
@@ -103,20 +103,20 @@ public class Customer implements Serializable {
         this.valueVehicle = valueVehicle;
     }
 
-    public List<TypeInsurance> getInsurances() {
+    public List<Insurance> getInsurances() {
         CalculatorTypeInsuranceVehicle calculatorTypeInsuranceVehicle = new CalculatorTypeInsuranceVehicle();
-        List<TypeInsurance> insurances = calculatorTypeInsuranceVehicle.calculateInsurance(valueVehicle, age, location);
-        for (TypeInsurance x : insurances) {
+        List<Insurance> insurances = calculatorTypeInsuranceVehicle.calculateInsurance(valueVehicle, age, location);
+        for (Insurance x : insurances) {
             addInsurance(x);
         }
         return insurances;
     }
 
-    public void addInsurance(TypeInsurance insurance) {
+    public void addInsurance(Insurance insurance) {
         insurances.add(insurance);
     }
 
-    public void removeInsurance(TypeInsurance insurance) {
+    public void removeInsurance(Insurance insurance) {
         insurances.remove(insurance);
     }
 

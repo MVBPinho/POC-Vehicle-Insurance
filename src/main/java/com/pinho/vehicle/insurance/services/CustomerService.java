@@ -1,14 +1,13 @@
 package com.pinho.vehicle.insurance.services;
 
 import com.pinho.vehicle.insurance.entities.Customer;
-import com.pinho.vehicle.insurance.entities.TypeInsurance;
+import com.pinho.vehicle.insurance.entities.Insurance;
 import com.pinho.vehicle.insurance.exceptions.RequiredObjectIsNullException;
 import com.pinho.vehicle.insurance.exceptions.ResourceNotFoundException;
 import com.pinho.vehicle.insurance.exceptions.UniqueConstraintViolationException;
 import com.pinho.vehicle.insurance.repositories.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -27,7 +26,7 @@ public class CustomerService {
         Customer customer = new Customer();
         for (Object[] row : result) {
 
-            TypeInsurance insurance = new TypeInsurance();
+            Insurance insurance = new Insurance();
 
             String customerName = (String) row[1];
             String insuranceType = (String) row[2];
@@ -42,13 +41,11 @@ public class CustomerService {
         return customer;
     }
 
-    @Transactional(readOnly = true)
     public List<Customer> findAll() {
         logger.info("Finding all customers!");
         return repository.findAll();
     }
 
-    @Transactional
     public Customer findById(Long id) {
         logger.info("Finding one customers!");
 
@@ -56,7 +53,6 @@ public class CustomerService {
                 .orElseThrow(() -> new ResourceNotFoundException("No records found for this ID!"));
     }
 
-    @Transactional
     public Customer create(Customer customer) {
         if (customer == null) throw new RequiredObjectIsNullException();
         logger.info("Creating one customer!");
@@ -68,7 +64,6 @@ public class CustomerService {
         }
     }
 
-    @Transactional
     public Customer update(Customer customer) {
         if (customer == null) throw new RequiredObjectIsNullException();
 
@@ -85,7 +80,6 @@ public class CustomerService {
         return repository.save(entity);
     }
 
-    @Transactional
     public void delete(Long id) {
         logger.info("Deleting one customer!");
 
