@@ -51,30 +51,30 @@ Para auxiliar nos testes do sistema foi desenvolvido a documentação técnica d
 ### Cadastrar um cliente
 - POST http://localhost:1000/customers
 **BODY**
-`
-{
+  
+`{
 	"name": "João",
     "cpf": "123.456.789-10",
     "age": 29,
     "location": "BH",
     "value_vehicle": 70000
-}
-`
+}`
+
 - HTTP/1.1 200 OK 
 
 ### Atualizar um cliente
 - PUT http://localhost:1000/customers
 **BODY**
-`
-{
+  
+`{
 	"id" : 1,
     "name": "João",
     "cpf": "123.456.789-10",
     "age": 29,
     "location": "SP",
     "value_vehicle": 80000
-}
-`
+}`
+
 - HTTP/1.1 200 OK 
 
 ### Deletar um cliente
@@ -93,25 +93,25 @@ Para auxiliar nos testes do sistema foi desenvolvido a documentação técnica d
 ## Cadastrar um seguro
 - POST http://localhost:1000/insurances
 **BODY**
-`
-{
+  
+`{
     "type": "TOTAL",
     "cost": 5
-}
-`
+}`
+
 
 - HTTP/1.1 200 OK 
 
 ## Atualizar um seguro
 - PUT http://localhost:1000/insurances
 **BODY**
-`
-{
+  
+`{
     "id" : 4,
     "type": "TOTAL",
     "cost": 8
-}
-`
+}`
+
 - HTTP/1.1 200 OK 
 
 ## Deletar um seguro
