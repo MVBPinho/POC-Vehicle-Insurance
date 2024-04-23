@@ -106,7 +106,7 @@ Para auxiliar nos testes do sistema foi desenvolvido a documentação técnica d
     "type": "TOTAL",
     "cost": 5
 }
-`
+´
 
 - HTTP/1.1 200 OK 
 
