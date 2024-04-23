@@ -69,7 +69,7 @@ public class CustomerService {
         );
     }
 
-    public CustomerDTO create(CustomerDTO dto) {
+    public TypeInsuranceCustomerDTO create(CustomerDTO dto) {
         if (dto == null) throw new RequiredObjectIsNullException();
         logger.info("Creating one customer!");
 
@@ -78,7 +78,7 @@ public class CustomerService {
 
         try {
             customer = repository.save(customer);
-            return new CustomerDTO(customer);
+            return new TypeInsuranceCustomerDTO(customer);
         } catch (Exception e) {
             throw new UniqueConstraintViolationException("Unique constraint violation: " + e.getMessage());
         }

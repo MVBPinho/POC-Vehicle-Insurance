@@ -80,10 +80,10 @@ public class CustomerController {
                     @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content)
             }
     )
-    public ResponseEntity<CustomerDTO> create(@RequestBody CustomerDTO customer) {
-        customer = service.create(customer);
+    public ResponseEntity<TypeInsuranceCustomerDTO> create(@RequestBody CustomerDTO customer) {
+        TypeInsuranceCustomerDTO dto = service.create(customer);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(customer.getId()).toUri();
-        return ResponseEntity.created(uri).body(customer);
+        return ResponseEntity.created(uri).body(dto);
     }
 
     @PutMapping(consumes = {MediaType.APPLICATION_JSON}, produces = {MediaType.APPLICATION_JSON})
