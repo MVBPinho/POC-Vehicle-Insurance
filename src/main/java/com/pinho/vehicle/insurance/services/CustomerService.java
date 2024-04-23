@@ -1,19 +1,21 @@
 package com.pinho.vehicle.insurance.services;
 
-import com.pinho.vehicle.insurance.controllers.CustomerController;
-import com.pinho.vehicle.insurance.data.vo.v1.CustomerVO;
+import com.pinho.vehicle.insurance.dto.CustomerDTO;
+import com.pinho.vehicle.insurance.dto.TypeInsuranceCustomerDTO;
+import com.pinho.vehicle.insurance.dto.CostTypeInsuranceDTO;
+import com.pinho.vehicle.insurance.dto.InsuranceDTO;
 import com.pinho.vehicle.insurance.entities.Customer;
-import com.pinho.vehicle.insurance.exceptions.ResourceNotFoundException;
+import com.pinho.vehicle.insurance.entities.Insurance;
 import com.pinho.vehicle.insurance.exceptions.RequiredObjectIsNullException;
-import com.pinho.vehicle.insurance.mapper.DozerMapper;
+import com.pinho.vehicle.insurance.exceptions.ResourceNotFoundException;
+import com.pinho.vehicle.insurance.exceptions.UniqueConstraintViolationException;
 import com.pinho.vehicle.insurance.repositories.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @Service
 public class CustomerService {
@@ -21,37 +23,76 @@ public class CustomerService {
     @Autowired
     private CustomerRepository repository;
 
-    public List<CustomerVO> findAll() {
-        var customers = DozerMapper.parseListObjects(repository.findAll(), CustomerVO.class);
-        customers.forEach(customer ->
-                        customer.add(linkTo(methodOn(
-                                CustomerController.class)
-                                .findById(customer.getKey()))
-                                .withSelfRel()));
-        return customers;
+    private Logger logger = Logger.getLogger(CustomerService.class.getName());
+
+    public Customer findCustomerWithInsurancesById() {
+        List<Object[]> result = repository.findCustomerInsuranceDetails();
+
+        Customer customer = new Customer();
+        for (Object[] row : result) {
+
+            Insurance insurance = new Insurance();
+
+            String customerName = (String) row[1];
+            String insuranceType = (String) row[2];
+            Integer insuranceCost = (Integer) row[3];
+
+            customer.setName(customerName);
+            insurance.setType(insuranceType);
+            insurance.setCost(insuranceCost);
+
+            customer.addInsurance(insurance);
+        }
+        return customer;
     }
 
-    public CustomerVO findById(Long id) {
+    public List<CustomerDTO> findAll() {
+        logger.info("Finding all customers!");
 
-        var entity = repository.findById(id)
+        List<Customer> list = repository.findAll();
+        return list.stream().map(CustomerDTO::new).collect(Collectors.toList());
+    }
+
+    public TypeInsuranceCustomerDTO findById(Long id) {
+        if (id == null) throw new RequiredObjectIsNullException();
+        logger.info("Finding one customers!");
+
+        return repository.findById(id)
+                .map(this::toMapCustomer)
                 .orElseThrow(() -> new ResourceNotFoundException("No records found for this ID!"));
-        CustomerVO vo = DozerMapper.parseObject(entity, CustomerVO.class);
-        vo.add(linkTo(methodOn(CustomerController.class).findById(id)).withSelfRel());
-        return vo;
     }
 
-    public CustomerVO create(CustomerVO customer) {
-        if (customer == null) throw new RequiredObjectIsNullException();
-        var entity = DozerMapper.parseObject(customer, Customer.class);
-        var vo = DozerMapper.parseObject(repository.save(entity), CustomerVO.class);
-        vo.add(linkTo(methodOn(CustomerController.class).findById(vo.getKey())).withSelfRel());
-        return vo;
+    public InsuranceDTO toMapInsurance(Insurance insurance) {
+        return new InsuranceDTO(
+                insurance.getType(),
+                insurance.getCost()
+        );
     }
 
-    public CustomerVO update(CustomerVO customer) {
-        if (customer == null) throw new RequiredObjectIsNullException();
+    public TypeInsuranceCustomerDTO create(CustomerDTO dto) {
+        if (dto == null) throw new RequiredObjectIsNullException();
+        logger.info("Creating one customer!");
 
-        var entity = repository.findById(customer.getKey())
+        Customer customer = new Customer(dto.getId(), dto.getName(), dto.getCpf(), dto.getAge(),
+                dto.getLocation(), dto.getValueVehicle());
+
+        try {
+            customer = repository.save(customer);
+            return new TypeInsuranceCustomerDTO(customer);
+        } catch (Exception e) {
+            throw new UniqueConstraintViolationException("Unique constraint violation: " + e.getMessage());
+        }
+    }
+
+    public CustomerDTO update(CustomerDTO dto) {
+        if (dto == null) throw new RequiredObjectIsNullException();
+
+        logger.info("Updating one customer!");
+
+        Customer customer = new Customer(dto.getId(), dto.getName(), dto.getCpf(), dto.getAge(),
+                dto.getLocation(), dto.getValueVehicle());
+
+        var entity = repository.findById(customer.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("No records found for this ID!"));
 
         entity.setName(customer.getName());
@@ -59,15 +100,30 @@ public class CustomerService {
         entity.setLocation(customer.getLocation());
         entity.setValueVehicle(customer.getValueVehicle());
 
-
-        var vo = DozerMapper.parseObject(repository.save(entity), CustomerVO.class);
-        vo.add(linkTo(methodOn(CustomerController.class).findById(vo.getKey())).withSelfRel());
-        return vo;
+        entity = repository.save(entity);
+        return new CustomerDTO(entity);
     }
 
     public void delete(Long id) {
+        if (id == null) throw new RequiredObjectIsNullException();
+        logger.info("Deleting one customer!");
+
         var entity = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No records found for this ID!"));
-        repository.delete(entity);
+
+        Customer customer = new Customer(entity.getId());
+
+        repository.delete(customer);
+    }
+
+    private TypeInsuranceCustomerDTO toMapCustomer(Customer customer) {
+        if (customer == null) {
+            return null;
+        }
+        List<CostTypeInsuranceDTO> insuranceDTOs = customer.getInsurances()
+                .stream()
+                .map(insurance -> new CostTypeInsuranceDTO(insurance.getType(), insurance.getCost()))
+                .collect(Collectors.toList());
+        return new TypeInsuranceCustomerDTO(customer.getName(), insuranceDTOs);
     }
 }
