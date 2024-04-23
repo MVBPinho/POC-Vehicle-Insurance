@@ -1,4 +1,4 @@
-package com.pinho.vehicle.insurance.unittests.mapper.mockInsurance;
+package com.pinho.vehicle.insurance.unittests.mapper.mocks;
 
 import com.pinho.vehicle.insurance.dto.CustomerDTO;
 import com.pinho.vehicle.insurance.dto.TypeInsuranceCustomerDTO;

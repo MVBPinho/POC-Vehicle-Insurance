@@ -6,7 +6,7 @@ import com.pinho.vehicle.insurance.entities.Insurance;
 import com.pinho.vehicle.insurance.exceptions.RequiredObjectIsNullException;
 import com.pinho.vehicle.insurance.repositories.InsuranceRepository;
 import com.pinho.vehicle.insurance.services.InsuranceService;
-import com.pinho.vehicle.insurance.unittests.mapper.mockInsurance.MockInsurance;
+import com.pinho.vehicle.insurance.unittests.mapper.mocks.MockInsurance;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
