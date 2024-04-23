@@ -50,6 +50,7 @@ Para auxiliar nos testes do sistema foi desenvolvido a documentação técnica d
 
 ### Cadastrar um cliente
 - POST http://localhost:1000/customers
+  
 **BODY**
   
 `{
@@ -64,6 +65,7 @@ Para auxiliar nos testes do sistema foi desenvolvido a documentação técnica d
 
 ### Atualizar um cliente
 - PUT http://localhost:1000/customers
+  
 **BODY**
   
 `{
@@ -92,6 +94,7 @@ Para auxiliar nos testes do sistema foi desenvolvido a documentação técnica d
 
 ## Cadastrar um seguro
 - POST http://localhost:1000/insurances
+  
 **BODY**
   
 `{
@@ -104,6 +107,7 @@ Para auxiliar nos testes do sistema foi desenvolvido a documentação técnica d
 
 ## Atualizar um seguro
 - PUT http://localhost:1000/insurances
+  
 **BODY**
   
 `{
