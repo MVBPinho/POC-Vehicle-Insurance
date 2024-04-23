@@ -1,50 +1,35 @@
-package com.pinho.vehicle.insurance.entities;
+package com.pinho.vehicle.insurance.dto;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.pinho.vehicle.insurance.utils.CalculatorTypeInsuranceVehicle;
-import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.pinho.vehicle.insurance.entities.Customer;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
-@Entity
-@Table(name = "tb_customer")
-public class Customer implements Serializable {
+public class CustomerDTO implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(nullable = false, length = 200)
     private String name;
-
-    @Column(unique = true, nullable = false, length = 14)
     private String cpf;
-
-    @Column(nullable = false, length = 2)
     private Integer age;
-
-    @Column(nullable = false, length = 2)
     private String location;
 
-    @Column(name = "value_vehicle")
+    @JsonProperty("value_vehicle")
     private Double valueVehicle;
 
-    @ManyToMany(mappedBy = "customers")
-    private List<Insurance> insurances = new ArrayList<>();
+    private List<InsuranceDTO> insurances = new ArrayList<>();
 
-    public Customer() {
+    public CustomerDTO() {
     }
 
-    public Customer(Long id) {
-        this.id = id;
-    }
-
-    public Customer(Long id, String name, String cpf, Integer age, String location, Double valueVehicle) {
+    public CustomerDTO(Long id, String name, String cpf, Integer age, String location, Double valueVehicle) {
         this.id = id;
         this.name = name;
         this.cpf = cpf;
@@ -53,7 +38,17 @@ public class Customer implements Serializable {
         this.valueVehicle = valueVehicle;
     }
 
-    public Customer(String name, List<Insurance> insurances) {
+    public CustomerDTO(Customer customer) {
+        id = customer.getId();
+        name = customer.getName();
+        cpf = customer.getCpf();
+        age = customer.getAge();
+        location = customer.getLocation();
+        valueVehicle = customer.getValueVehicle();
+        insurances = customer.getInsurances().stream().map(InsuranceDTO::new).collect(Collectors.toList());
+    }
+
+    public CustomerDTO(String name, List<InsuranceDTO> insurances) {
         this.name = name;
         this.insurances = insurances;
     }
@@ -102,29 +97,15 @@ public class Customer implements Serializable {
         this.valueVehicle = valueVehicle;
     }
 
-    @JsonManagedReference
-    public List<Insurance> getInsurances() {
-        CalculatorTypeInsuranceVehicle calculatorTypeInsuranceVehicle = new CalculatorTypeInsuranceVehicle();
-        List<Insurance> insurances = calculatorTypeInsuranceVehicle.calculateInsurance(valueVehicle, age, location);
-        for (Insurance x : insurances) {
-            addInsurance(x);
-        }
+    public List<InsuranceDTO> getInsurances() {
         return insurances;
-    }
-
-    public void addInsurance(Insurance insurance) {
-        insurances.add(insurance);
-    }
-
-    public void removeInsurance(Insurance insurance) {
-        insurances.remove(insurance);
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Customer customer = (Customer) o;
+        CustomerDTO customer = (CustomerDTO) o;
         return Objects.equals(id, customer.id);
     }
 

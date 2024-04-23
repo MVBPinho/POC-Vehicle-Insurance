@@ -1,9 +1,12 @@
 package com.pinho.vehicle.insurance.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -22,6 +25,15 @@ public class Insurance implements Serializable {
 
     @Column(nullable = false, length = 3)
     private Integer cost;
+
+    @ManyToMany(cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    })
+    @JoinTable(name = "tb_customer_insurance",
+            joinColumns = @JoinColumn (name = "id_insurance"),
+            inverseJoinColumns = @JoinColumn (name = "id_customer"))
+    private List<Customer> customers = new ArrayList<>();
 
     public Insurance() {
     }
@@ -59,6 +71,11 @@ public class Insurance implements Serializable {
 
     public void setCost(Integer cost) {
         this.cost = cost;
+    }
+
+    @JsonBackReference
+    public List<Customer> getCustomer() {
+        return customers;
     }
 
     @Override

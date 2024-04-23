@@ -26,10 +26,12 @@ public class InsuranceService {
         logger.info("Finding all insurances!");
 
         List<Insurance> list = repository.findAll();
-        return list.stream().map(x -> new InsuranceDTO(x)).collect(Collectors.toList());
+        return list.stream().map(InsuranceDTO::new).collect(Collectors.toList());
     }
 
     public InsuranceDTO findById(Long id) {
+        if (id == null) throw new RequiredObjectIsNullException();
+
         logger.info("Finding one insurance!");
         return repository.findById(id)
                 .map(this::toMapInsurance)

@@ -1,5 +1,6 @@
 package com.pinho.vehicle.insurance.controllers;
 
+import com.pinho.vehicle.insurance.dto.CustomerDTO;
 import com.pinho.vehicle.insurance.entities.Customer;
 import com.pinho.vehicle.insurance.services.CustomerService;
 import com.pinho.vehicle.insurance.utils.MediaType;
@@ -12,7 +13,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -39,8 +42,9 @@ public class CustomerController {
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                     @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content)
             })
-    public List<Customer> findAll() {
-        return service.findAll();
+    public ResponseEntity<List<CustomerDTO>> findAll() {
+        List<CustomerDTO> list = service.findAll();
+        return ResponseEntity.ok().body(list);
     }
 
     @GetMapping(value = "/{id}", produces = {MediaType.APPLICATION_JSON})
@@ -57,8 +61,9 @@ public class CustomerController {
                     @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content)
             }
     )
-    public Customer findById(@PathVariable(value = "id") Long id) {
-        return service.findById(id);
+    public ResponseEntity<CustomerDTO> findById(@PathVariable(value = "id") Long id) {
+        CustomerDTO dto = service.findById(id);
+        return ResponseEntity.ok().body(dto);
     }
 
     @PostMapping(consumes = {MediaType.APPLICATION_JSON})
@@ -74,8 +79,10 @@ public class CustomerController {
                     @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content)
             }
     )
-    public Customer create(@RequestBody Customer customer) {
-        return service.create(customer);
+    public ResponseEntity<CustomerDTO> create(@RequestBody CustomerDTO customer) {
+        customer = service.create(customer);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(customer.getId()).toUri();
+        return ResponseEntity.created(uri).body(customer);
     }
 
     @PutMapping(consumes = {MediaType.APPLICATION_JSON}, produces = {MediaType.APPLICATION_JSON})
@@ -92,8 +99,9 @@ public class CustomerController {
                     @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content)
             }
     )
-    public Customer update(@RequestBody Customer customer) {
-        return service.update(customer);
+    public ResponseEntity<CustomerDTO> update(@RequestBody CustomerDTO customer) {
+        CustomerDTO dto = service.update(customer);
+        return ResponseEntity.ok().body(dto);
     }
 
     @DeleteMapping("/{id}")
@@ -108,7 +116,7 @@ public class CustomerController {
                     @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content)
             }
     )
-    public ResponseEntity<Customer> delete(@PathVariable(value = "id") Long id) {
+    public ResponseEntity<CustomerDTO> delete(@PathVariable(value = "id") Long id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
     }

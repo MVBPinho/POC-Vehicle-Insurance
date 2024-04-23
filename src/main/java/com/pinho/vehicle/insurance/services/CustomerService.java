@@ -1,5 +1,7 @@
 package com.pinho.vehicle.insurance.services;
 
+import com.pinho.vehicle.insurance.dto.CustomerDTO;
+import com.pinho.vehicle.insurance.dto.InsuranceDTO;
 import com.pinho.vehicle.insurance.entities.Customer;
 import com.pinho.vehicle.insurance.entities.Insurance;
 import com.pinho.vehicle.insurance.exceptions.RequiredObjectIsNullException;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @Service
 public class CustomerService {
@@ -41,33 +44,57 @@ public class CustomerService {
         return customer;
     }
 
-    public List<Customer> findAll() {
+    public List<CustomerDTO> findAll() {
         logger.info("Finding all customers!");
-        return repository.findAll();
+
+        List<Customer> list = repository.findAll();
+        return list.stream().map(CustomerDTO::new).collect(Collectors.toList());
     }
 
-    public Customer findById(Long id) {
+    public CustomerDTO findById(Long id) {
+        if (id == null) throw new RequiredObjectIsNullException();
         logger.info("Finding one customers!");
 
         return repository.findById(id)
+                .map(this::toMapCustomer)
                 .orElseThrow(() -> new ResourceNotFoundException("No records found for this ID!"));
     }
 
-    public Customer create(Customer customer) {
-        if (customer == null) throw new RequiredObjectIsNullException();
+    private CustomerDTO toMapCustomer(Customer customer) {
+        return  new CustomerDTO(customer.getId(), customer.getName(), customer.getCpf(),
+                customer.getAge(), customer.getLocation(), customer.getValueVehicle());
+    }
+
+    public InsuranceDTO toMapInsurance(Insurance insurance) {
+        return new InsuranceDTO(
+                insurance.getId(),
+                insurance.getType(),
+                insurance.getCost()
+        );
+    }
+
+    public CustomerDTO create(CustomerDTO dto) {
+        if (dto == null) throw new RequiredObjectIsNullException();
         logger.info("Creating one customer!");
 
+        Customer customer = new Customer(dto.getId(), dto.getName(), dto.getCpf(), dto.getAge(),
+                dto.getLocation(), dto.getValueVehicle());
+
         try {
-            return repository.save(customer);
+            customer = repository.save(customer);
+            return new CustomerDTO(customer);
         } catch (Exception e) {
             throw new UniqueConstraintViolationException("Unique constraint violation: " + e.getMessage());
         }
     }
 
-    public Customer update(Customer customer) {
-        if (customer == null) throw new RequiredObjectIsNullException();
+    public CustomerDTO update(CustomerDTO dto) {
+        if (dto == null) throw new RequiredObjectIsNullException();
 
         logger.info("Updating one customer!");
+
+        Customer customer = new Customer(dto.getId(), dto.getName(), dto.getCpf(), dto.getAge(),
+                dto.getLocation(), dto.getValueVehicle());
 
         var entity = repository.findById(customer.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("No records found for this ID!"));
@@ -77,14 +104,19 @@ public class CustomerService {
         entity.setLocation(customer.getLocation());
         entity.setValueVehicle(customer.getValueVehicle());
 
-        return repository.save(entity);
+        entity = repository.save(entity);
+        return new CustomerDTO(entity);
     }
 
     public void delete(Long id) {
+        if (id == null) throw new RequiredObjectIsNullException();
         logger.info("Deleting one customer!");
 
         var entity = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No records found for this ID!"));
-        repository.delete(entity);
+
+        Customer customer = new Customer(entity.getId());
+
+        repository.delete(customer);
     }
 }
