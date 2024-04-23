@@ -24,7 +24,7 @@ public class CustomerDTO implements Serializable {
     @JsonProperty("value_vehicle")
     private Double valueVehicle;
 
-    private List<InsuranceDTO> insurances = new ArrayList<>();
+    private List<CostTypeInsuranceDTO> insurances = new ArrayList<>();
 
     public CustomerDTO() {
     }
@@ -45,10 +45,10 @@ public class CustomerDTO implements Serializable {
         age = customer.getAge();
         location = customer.getLocation();
         valueVehicle = customer.getValueVehicle();
-        insurances = customer.getInsurances().stream().map(InsuranceDTO::new).collect(Collectors.toList());
+        insurances = customer.getInsurances().stream().map(CostTypeInsuranceDTO::new).collect(Collectors.toList());
     }
 
-    public CustomerDTO(String name, List<InsuranceDTO> insurances) {
+    public CustomerDTO(String name, List<CostTypeInsuranceDTO> insurances) {
         this.name = name;
         this.insurances = insurances;
     }
@@ -97,7 +97,7 @@ public class CustomerDTO implements Serializable {
         this.valueVehicle = valueVehicle;
     }
 
-    public List<InsuranceDTO> getInsurances() {
+    public List<CostTypeInsuranceDTO> getInsurances() {
         return insurances;
     }
 

@@ -1,6 +1,8 @@
 package com.pinho.vehicle.insurance.services;
 
 import com.pinho.vehicle.insurance.dto.CustomerDTO;
+import com.pinho.vehicle.insurance.dto.TypeInsuranceCustomerDTO;
+import com.pinho.vehicle.insurance.dto.CostTypeInsuranceDTO;
 import com.pinho.vehicle.insurance.dto.InsuranceDTO;
 import com.pinho.vehicle.insurance.entities.Customer;
 import com.pinho.vehicle.insurance.entities.Insurance;
@@ -51,7 +53,7 @@ public class CustomerService {
         return list.stream().map(CustomerDTO::new).collect(Collectors.toList());
     }
 
-    public CustomerDTO findById(Long id) {
+    public TypeInsuranceCustomerDTO findById(Long id) {
         if (id == null) throw new RequiredObjectIsNullException();
         logger.info("Finding one customers!");
 
@@ -60,14 +62,8 @@ public class CustomerService {
                 .orElseThrow(() -> new ResourceNotFoundException("No records found for this ID!"));
     }
 
-    private CustomerDTO toMapCustomer(Customer customer) {
-        return  new CustomerDTO(customer.getId(), customer.getName(), customer.getCpf(),
-                customer.getAge(), customer.getLocation(), customer.getValueVehicle());
-    }
-
     public InsuranceDTO toMapInsurance(Insurance insurance) {
         return new InsuranceDTO(
-                insurance.getId(),
                 insurance.getType(),
                 insurance.getCost()
         );
@@ -118,5 +114,16 @@ public class CustomerService {
         Customer customer = new Customer(entity.getId());
 
         repository.delete(customer);
+    }
+
+    private TypeInsuranceCustomerDTO toMapCustomer(Customer customer) {
+        if (customer == null) {
+            return null;
+        }
+        List<CostTypeInsuranceDTO> insuranceDTOs = customer.getInsurances()
+                .stream()
+                .map(insurance -> new CostTypeInsuranceDTO(insurance.getType(), insurance.getCost()))
+                .collect(Collectors.toList());
+        return new TypeInsuranceCustomerDTO(customer.getName(), insuranceDTOs);
     }
 }

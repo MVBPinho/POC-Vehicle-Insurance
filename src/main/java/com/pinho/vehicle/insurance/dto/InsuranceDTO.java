@@ -24,6 +24,11 @@ public class InsuranceDTO implements Serializable {
         this.cost = cost;
     }
 
+    public InsuranceDTO(String type, Integer cost) {
+        this.type = type;
+        this.cost = cost;
+    }
+
     public InsuranceDTO(Insurance insurance) {
         id = insurance.getId();
         type = insurance.getType();

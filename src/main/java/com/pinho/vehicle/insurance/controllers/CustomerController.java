@@ -1,6 +1,7 @@
 package com.pinho.vehicle.insurance.controllers;
 
 import com.pinho.vehicle.insurance.dto.CustomerDTO;
+import com.pinho.vehicle.insurance.dto.TypeInsuranceCustomerDTO;
 import com.pinho.vehicle.insurance.entities.Customer;
 import com.pinho.vehicle.insurance.services.CustomerService;
 import com.pinho.vehicle.insurance.utils.MediaType;
@@ -61,8 +62,8 @@ public class CustomerController {
                     @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content)
             }
     )
-    public ResponseEntity<CustomerDTO> findById(@PathVariable(value = "id") Long id) {
-        CustomerDTO dto = service.findById(id);
+    public ResponseEntity<TypeInsuranceCustomerDTO> findById(@PathVariable(value = "id") Long id) {
+        TypeInsuranceCustomerDTO dto = service.findById(id);
         return ResponseEntity.ok().body(dto);
     }
 
