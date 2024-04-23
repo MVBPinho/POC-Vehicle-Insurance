@@ -1,6 +1,5 @@
 package com.pinho.vehicle.insurance.entities;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.pinho.vehicle.insurance.utils.CalculatorTypeInsuranceVehicle;
 import jakarta.persistence.*;
 
@@ -34,7 +33,13 @@ public class Customer implements Serializable {
     @Column(name = "value_vehicle")
     private Double valueVehicle;
 
-    @ManyToMany(mappedBy = "customers")
+    @ManyToMany(cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    })
+    @JoinTable(name = "tb_customer_insurance",
+            joinColumns = @JoinColumn (name = "id_customer"),
+            inverseJoinColumns = @JoinColumn (name = "id_insurance"))
     private List<Insurance> insurances = new ArrayList<>();
 
     public Customer() {
@@ -60,6 +65,10 @@ public class Customer implements Serializable {
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -102,7 +111,6 @@ public class Customer implements Serializable {
         this.valueVehicle = valueVehicle;
     }
 
-    @JsonManagedReference
     public List<Insurance> getInsurances() {
         CalculatorTypeInsuranceVehicle calculatorTypeInsuranceVehicle = new CalculatorTypeInsuranceVehicle();
         List<Insurance> insurances = calculatorTypeInsuranceVehicle.calculateInsurance(valueVehicle, age, location);
