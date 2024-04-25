@@ -50,36 +50,64 @@ Para auxiliar nos testes do sistema foi desenvolvido a documentação técnica d
 
 ### Cadastrar um cliente
 - POST http://localhost:1000/customers
-- 
-**BODY:**
+
+**BODY**
   
-`
-{
+`{
 	"name": "João",
     "cpf": "123.456.789-10",
     "age": 29,
     "location": "BH",
     "value_vehicle": 70000
+}`
+
+- HTTP/1.1 201 Created 
+`
+{
+    "name": "João",
+    "insurances": [
+        {
+            "type": "basic",
+            "cost": 2
+        }
+    ]
 }
 `
 
-- HTTP/1.1 200 OK 
+*Examplo 2:
+**Input:**
+{
+    "name": "João",
+    "cpf": "222.222.222-11",
+    "age": 29,
+    "location": "BH",
+    "value_vehicle": 70000.00
+}
+
+**Output:**
+{
+    "name": "João",
+    "insurances": [
+        {
+            "type": "partial",
+            "cost": 3
+        }
+    ]
+}
 
 ### Atualizar um cliente
 - PUT http://localhost:1000/customers
-- 
-**BODY:**
   
-`
-{
+**BODY**
+  
+`{
 	"id" : 1,
     "name": "João",
     "cpf": "123.456.789-10",
     "age": 29,
     "location": "SP",
     "value_vehicle": 80000
-}
-`
+}`
 
 - HTTP/1.1 200 OK 
 
@@ -98,33 +126,52 @@ Para auxiliar nos testes do sistema foi desenvolvido a documentação técnica d
 
 ## Cadastrar um seguro
 - POST http://localhost:1000/insurances
-- 
-**BODY:**
   
-`
-{
+**BODY**
+  
+`{
     "type": "TOTAL",
     "cost": 5
-}
-`
+}`
+
 
 - HTTP/1.1 200 OK 
 
 ## Atualizar um seguro
 - PUT http://localhost:1000/insurances
-- 
-**BODY:**
   
-`
-{
+**BODY**
+  
+`{
     "id" : 4,
     "type": "TOTAL",
     "cost": 8
-}
-`
+}`
 
 - HTTP/1.1 200 OK 
 
 ## Deletar um seguro
 - DELETE http://localhost:1000/insurances/1
 - HTTP/1.1 204 NO CONTENT
+
+# Observações
+- O arquivo Dockerfile não foi anexado neste projeto porque apresentou problemas, para executar o comando do docker.
+
+FROM openjdk:17
+VOLUME /tmp
+EXPOSE 1000
+ADD ./target/vehicle-insurance-0.0.1-SNAPSHOT.jar vehicle-insurance.jar
+ENTRYPOINT ["java","-jar","/vehicle-insurance.jar"]
+
+
+* Comando para gerar a imagem
+docker build -t vehicle-insurance:v1 .
+
+* Comando para executar o build
+docker run -p 1000:1000 --name vehicle-insurance:v1
+
+
+- Não foi realizado todos os testes, apenas os testes unitários. Ficou pendente os testes de integração.
+- Neste projeto utilizamos o banco de dados H2 console, para testes locais. Uma proposta seria desenvolver um arquivo application-dev.properties e application-prd.properties para as conexões com o banco de dados (MySQL ou Postgres por exemplo) e outras configurações.
+
+- O relatório dos logs, iria utilizar o Prometheus com Grafana, porém para está entrega na branch master terá estas versões, continuarei o desenvolvimento em outra branch chamada developer.
