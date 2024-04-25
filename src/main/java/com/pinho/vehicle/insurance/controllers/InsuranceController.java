@@ -19,7 +19,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/insurances")
+@RequestMapping("/api/insurances")
 @Tag(name = "Insurance", description = "Endpoints for Managing Insurance")
 public class InsuranceController {
 
