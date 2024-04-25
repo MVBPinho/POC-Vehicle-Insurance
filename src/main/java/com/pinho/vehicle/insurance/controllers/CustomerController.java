@@ -20,7 +20,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/customers")
+@RequestMapping("/api/customers")
 @Tag(name = "Customer", description = "Endpoints for Managing Customer")
 public class CustomerController {
 
